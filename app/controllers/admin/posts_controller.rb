@@ -1,5 +1,5 @@
 class Admin::PostsController < ApplicationController
- http_basic_authenticate_with name: "geek", password: "jock", except: [:new, :create, :show]
+ http_basic_authenticate_with name: "geek", password: "jock", except: [:index, :new, :create, :show]
   def index
     @posts = Post.all
   end
@@ -10,11 +10,8 @@ class Admin::PostsController < ApplicationController
 
   def create
     @post = Post.new(params[:post])   
-    puts "------------------------------------"
-    p Post.count
     if @post.save
       flash[:notice] = "Post was successfully saved."
-      p Post.count
       redirect_to admin_post_url(@post)
     else
       render :new
@@ -40,9 +37,9 @@ class Admin::PostsController < ApplicationController
   end
 
   def destroy
-    post = Post.find(params[:destroy])
+    post = Post.find(params[:id])
     post.destroy
 
-    redirect_to admin_posts_url
+    redirect_to admin_posts_path
   end
 end
